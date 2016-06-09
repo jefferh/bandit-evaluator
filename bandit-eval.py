@@ -14,6 +14,9 @@ def Triangularizer(Qk, rk, Nk, L):
     
     while len(M) > 0:
         i = min(L, key=L.get) # state i in bandit k whose label L(i) is smallest
-        alpha = 1/(1 - Qk[M[i],M[i]])
-        
-    
+        i_ind = M[i] # state i's row in Qk and rk
+        alpha = 1/(1 - Qk[i_ind,i_ind])
+        tableau[i_ind] = alpha * tableau[i_ind] # update state i's row in the tableau
+        del M[i] # remove state i from M
+        for j in M: # update the other rows in the tableau
+            tableau[M[j]] = tableau[M[j]] + Qk[M[j],i_ind] * tableau[i_ind]
