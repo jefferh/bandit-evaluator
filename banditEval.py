@@ -22,6 +22,9 @@ def Triangularizer(Qk, rk, Nk, Lk):
         del Lktemp[i] # remove state i from L
         for j in M: # update the other rows in the tableau
             tableau[M[j]] = tableau[M[j]] - tableau[M[j],i_ind] * tableau[i_ind]
-    return tableau
+    # return tableau
+    tilde_Qk = np.eye(nk) - tableau[:,:-1] # finalized transition rates
+    tilde_rk = tableau[:,-1] # finalized rewards
+    return (tableau, tilde_Qk, tilde_rk)
 
-def Evaluator():
+# def Evaluator():
