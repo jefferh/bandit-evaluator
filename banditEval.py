@@ -23,3 +23,5 @@ def Triangularizer(Qk, rk, Nk, Lk):
         for j in M: # update the other rows in the tableau
             tableau[M[j]] = tableau[M[j]] - tableau[M[j],i_ind] * tableau[i_ind]
     return tableau
+
+def Evaluator():
