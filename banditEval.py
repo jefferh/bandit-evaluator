@@ -3,10 +3,14 @@ import numpy as np
 
 def Triangularizer(Qk, rk, Nk, Lk):
     # Triangularize the data for bandit k according to the labeling L
+    # Inputs:
     # Qk = numpy array representing the rate matrix for bandit k
     # rk = numpy array representing the reward vector for bandit k
-    # Nk = dictionary with keys denoting the state number, and values giving the corresponding row number in Qk and rk
+    # Nk = dictionary with keys denoting the state names, and values giving the corresponding row number in Qk and rk
     # L = dictionary with keys denoting the state number, and values giving the corresponding label, for each state in Nk
+    # Outputs:
+    # tilde_Qk = finalized transition rates for bandit k
+    # tilde_rk = finalized rewards for bandit k
 
     nk = len(Nk) # number of states in bandit k
     tableau = np.concatenate((np.eye(nk)-Qk, rk.T), axis=1)
@@ -22,9 +26,13 @@ def Triangularizer(Qk, rk, Nk, Lk):
         del Lktemp[i] # remove state i from L
         for j in M: # update the other rows in the tableau
             tableau[M[j]] = tableau[M[j]] - tableau[M[j],i_ind] * tableau[i_ind]
-    # return tableau
     tilde_Qk = np.eye(nk) - tableau[:,:-1] # finalized transition rates
     tilde_rk = tableau[:,-1] # finalized rewards
-    return (tableau, tilde_Qk, tilde_rk)
+    return (tilde_Qk, tilde_rk)
 
-# def Evaluator():
+def Evaluator(bandits, sHat, L):
+    # Evaluate the total reward earned under the policy keyed to the labeling L starting from the multi-state sHat
+    # Inputs:
+    # bandits = dictionary where bandit k is identified by key k, whose corresponding value is the tuple (Qk, rk) giving bandit k's transition rate matrix Qk and reward vector rk
+    # sHat = initial multi-state
+    # L = labeling
