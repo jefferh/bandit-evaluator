@@ -31,8 +31,11 @@ def Triangularizer(Qk, rk, Nk, Lk):
     return (tilde_Qk, tilde_rk)
 
 def Evaluator(bandits, sHat, L):
-    # Evaluate the total reward earned under the policy keyed to the labeling L starting from the multi-state sHat
+    # Evaluate the total reward earned under the policy keyed to the labeling L starting from a given initial multi-state
     # Inputs:
-    # bandits = dictionary where bandit k is identified by key k, whose corresponding value is the tuple (Qk, rk) giving bandit k's transition rate matrix Qk and reward vector rk
-    # sHat = initial multi-state
+    # bandits = dictionary where bandit k is identified by key k, whose corresponding value is the tuple (Qk, rk, Nk) giving bandit k's transition rate matrix Qk, reward vector rk, and dictionary Nk with keys denoting state names and values giving the corresponding row number in Qk and rk
+    # sHat = dictionary denoting the initial multi-state (bandit : state)
     # L = labeling
+    
+    y = {key: {k : 0 for k in bandits[key][2].keys()} for key in bandits.keys()}
+    
