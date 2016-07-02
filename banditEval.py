@@ -7,7 +7,7 @@ def Triangularizer(Qk, rk, Nk, Lk):
     # Qk = numpy array representing the rate matrix for bandit k
     # rk = numpy array representing the reward vector for bandit k
     # Nk = dictionary with keys denoting the state names, and values giving the corresponding row number in Qk and rk
-    # L = dictionary with keys denoting the state number, and values giving the corresponding label, for each state in Nk
+    # L = dictionary with keys denoting state names and values giving the corresponding label, for each state in Nk
     # Outputs:
     # tilde_Qk = finalized transition rates for bandit k
     # tilde_rk = finalized rewards for bandit k
@@ -35,7 +35,14 @@ def Evaluator(bandits, sHat, L):
     # Inputs:
     # bandits = dictionary where bandit k is identified by key k, whose corresponding value is the tuple (Qk, rk, Nk) giving bandit k's transition rate matrix Qk, reward vector rk, and dictionary Nk with keys denoting state names and values giving the corresponding row number in Qk and rk
     # sHat = dictionary denoting the initial multi-state (bandit : state)
-    # L = labeling
+    # L = dictionary with keys denoting state names and values giving the corresponding labels
     
-    y = {key: {k : 0 for k in bandits[key][2].keys()} for key in bandits.keys()}
-    
+    y = {bandit: {state : 0 for state in bandits[bandit][2].keys()} for bandit in bandits.keys()}
+    finTableaus = {bandit : None for bandit in bandits.keys()} # dictionary to store finalized tableaus for each bandit
+    for bandit in bandits: # Triangularize each bandit
+        Qk = bandits[bandit][0]
+        rk = bandits[bandit][1]
+        Nk = bandits[bandit][2]
+        Lk = {state : L[state] for state in bandits[bandit][2].keys()}
+        finTableaus[bandit] = Triangularizer(Qk, rk, Nk, Lk)
+    return finTableaus # test output
