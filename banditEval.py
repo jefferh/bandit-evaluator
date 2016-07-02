@@ -46,4 +46,14 @@ def evaluator(bandits, sHat, L):
     return finTableaus # test output
     V = 0 # initialize V
     n = 1
-    
+    while n <= len(L):
+        i = [state for state in L.keys() if L[state] == n]
+        if len(i) != 1:
+            print "Error: Invalid labeling"
+            return
+        else:
+            i = i[0]
+            for bandit in bandits:
+                if i in set(bandits[bandit][2].keys()):
+                    k = bandit
+                    break
