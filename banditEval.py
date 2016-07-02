@@ -1,7 +1,7 @@
 from __future__ import division
 import numpy as np
 
-def Triangularizer(Qk, rk, Nk, Lk):
+def triangularizer(Qk, rk, Nk, Lk):
     # Triangularize the data for bandit k according to the labeling L
     # Inputs:
     # Qk = numpy array representing the rate matrix for bandit k
@@ -30,7 +30,7 @@ def Triangularizer(Qk, rk, Nk, Lk):
     tilde_rk = tableau[:,-1] # finalized rewards
     return (tilde_Qk, tilde_rk)
 
-def Evaluator(bandits, sHat, L):
+def evaluator(bandits, sHat, L):
     # Evaluate the total reward earned under the policy keyed to the labeling L starting from a given initial multi-state
     # Inputs:
     # bandits = dictionary where bandit k is identified by key k, whose corresponding value is the tuple (Qk, rk, Nk) giving bandit k's transition rate matrix Qk, reward vector rk, and dictionary Nk with keys denoting state names and values giving the corresponding row number in Qk and rk
@@ -39,10 +39,11 @@ def Evaluator(bandits, sHat, L):
     
     y = {bandit: {state : 0 for state in bandits[bandit][2].keys()} for bandit in bandits.keys()}
     finTableaus = {bandit : None for bandit in bandits.keys()} # dictionary to store finalized tableaus for each bandit
-    for bandit in bandits: # Triangularize each bandit
-        Qk = bandits[bandit][0]
-        rk = bandits[bandit][1]
-        Nk = bandits[bandit][2]
+    for bandit in bandits: # Triangularize each bandit according to L
+        Qk,rk,Nk = bandits[bandit]
         Lk = {state : L[state] for state in bandits[bandit][2].keys()}
-        finTableaus[bandit] = Triangularizer(Qk, rk, Nk, Lk)
+        finTableaus[bandit] = triangularizer(Qk, rk, Nk, Lk)
     return finTableaus # test output
+    V = 0 # initialize V
+    n = 1
+    
