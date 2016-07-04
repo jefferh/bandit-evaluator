@@ -30,14 +30,16 @@ def triangularizer(Qk, rk, Nk, Lk):
     tilde_rk = tableau[:,-1] # finalized rewards
     return (tilde_Qk, tilde_rk)
 
-def evaluator(bandits, sHat, L):
+def evaluator(bandits, s, L):
     # Evaluate the total reward earned under the policy keyed to the labeling L starting from a given initial multi-state
     # Inputs:
     # bandits = dictionary where bandit k is identified by key k, whose corresponding value is the tuple (Qk, rk, Nk) giving bandit k's transition rate matrix Qk, reward vector rk, and dictionary Nk with keys denoting state names and values giving the corresponding row number in Qk and rk
-    # sHat = dictionary denoting the initial multi-state (bandit : state)
+    # s = dictionary denoting the initial multi-state (bandit : state)
     # L = dictionary with keys denoting state names and values giving the corresponding labels
     
     y = {bandit: {state : 0 for state in bandits[bandit][2].keys()} for bandit in bandits.keys()}
+    for bandit in bandits: # Initialize y for each bandit
+        y[bandit][s[bandit]] = 1
     finTableaus = {bandit : None for bandit in bandits.keys()} # dictionary to store finalized tableaus for each bandit
     for bandit in bandits: # Triangularize each bandit according to L
         Qk,rk,Nk = bandits[bandit]
