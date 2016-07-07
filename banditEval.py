@@ -50,12 +50,23 @@ def evaluator(bandits, s, L):
     n = 1
     while n <= len(L):
         i = [state for state in L.keys() if L[state] == n]
-        if len(i) != 1:
+        if len(i) != 1: # if more than one state's label is n
             print "Error: Invalid labeling"
             return
         else:
             i = i[0]
-            for bandit in bandits:
+            for bandit in bandits: # find the bandit k that state i belongs to
                 if i in set(bandits[bandit][2].keys()):
                     k = bandit
                     break
+            rTilde_i = finTableaus[k][1][bandits[k][2][i]]
+            yk_i = y[k][i]
+            prod = 1
+            for p in set(bandits.keys()).difference(set[k])):
+                prod *= sum(y[p].values())
+            V += rTilde_i * yk_i * prod # update V
+            i_ind = bandits[k][2][i]
+            for state in set(bandits[k][2].keys()).difference(set[i])):
+                state_ind = bandits[k][2][state]
+                y[k][state] += yk_i * bandits[k][0][i_ind, state_ind]
+            y[k][i] = 0
