@@ -45,7 +45,6 @@ def evaluator(bandits, s, L):
         Qk,rk,Nk = bandits[bandit]
         Lk = {state : L[state] for state in bandits[bandit][2].keys()}
         finTableaus[bandit] = triangularizer(Qk, rk, Nk, Lk)
-    return finTableaus # test output
     V = 0 # initialize V
     n = 1
     while n <= len(L):
@@ -70,3 +69,5 @@ def evaluator(bandits, s, L):
                 state_ind = bandits[k][2][state]
                 y[k][state] += yk_i * bandits[k][0][i_ind, state_ind]
             y[k][i] = 0
+            n += 1
+    return (finTableaus, y, V)
